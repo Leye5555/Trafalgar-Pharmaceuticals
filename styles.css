@@ -6,9 +6,14 @@
   --sec-clr100: hsla(259, 42%, 14%, 0.5);
   --light-mode-bg-clr: #ffffff;
   --light-clr: #ffffff;
-  --light-clr-100: hsla(360deg 100% 100% / 0.85);
+  --light-clr100: hsla(360deg 100% 100% / 0.85);
   --dark-clr: #212121;
   --dark-mode-bg-clr: #212121;
+  --theme-font-clr: var(--sec-clr);
+  --theme-font-clr100: var(--sec-clr100);
+  --theme-bg-clr: var(--light-mode-bg-clr);
+  --theme-clr: var(--light-clr);
+  --theme-clr100: var(--light-clr100);
 }
 
 *,
@@ -175,13 +180,13 @@ select {
   content: '';
   width: 100%;
   height: 12em;
-  background-color: var(--light-mode-bg-clr);
+  background-color: var(--theme-bg-clr);
 }
 header {
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
-  background-color: var(--light-mode-bg-clr);
+  background-color: var(--theme-bg-clr);
   height: max-content;
   padding-bottom: clamp(40px, 4vw, 63px);
   position: relative;
@@ -215,10 +220,55 @@ ul.nav-list-lg {
   justify-content: space-between;
   width: 100%;
   max-width: max-content;
-  padding: 0 clamp(20px, 12vw, 192px) 0 0;
   margin: 14px 0;
 }
+.nav-toggle-mode {
+  padding: 0 clamp(20px, 10vw, 102px) 0 0;
+}
 
+.nav-toggle-mode > button {
+  background-color: transparent;
+  background-image: url('./assets/dark-mode.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  width: 45px;
+  height: 25px;
+}
+.nav-toggle-mode > button:focus {
+  outline: none;
+}
+
+/**
+ using the preferred system theme(light/darK) to choose the mode
+*/
+
+@media (prefers-color-scheme: light) {
+  .nav-toggle-mode > button {
+    background-image: url('./assets/dark-mode.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+  :root {
+    --theme-font-clr: var(--sec-clr);
+    --theme-font-clr100: var(--sec-clr100);
+    --theme-clr: var(--light-clr);
+    --theme-bg-clr: var(--light-mode-bg-clr);
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .nav-toggle-mode > button {
+    background-image: url('./assets/light-mode.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+  :root {
+    --theme-font-clr: var(--light-clr);
+    --theme-clr: var(--dark-clr);
+    --theme-bg-clr: var(--dark-mode-bg-clr);
+  }
+}
 li.nav-list-item {
   margin-right: clamp(16px, 2.5vw, 40px);
 }
@@ -227,7 +277,7 @@ li.nav-list-item:last-child {
 }
 li.nav-list-item > a {
   text-decoration: none;
-  color: var(--sec-clr100);
+  color: var(--theme-font-clr);
   width: max-content;
   display: block;
   font-weight: 400;
@@ -237,7 +287,7 @@ li.nav-list-item > a {
 }
 
 li.nav-list-item--active > a {
-  color: var(--sec-clr);
+  color: var(--theme-font-clr);
   font-weight: 700;
 }
 
@@ -252,7 +302,7 @@ main {
 div.hero-wrap {
   width: 100%;
   height: max-content;
-  background-color: var(--light-mode-bg-clr);
+  background-color: var(--theme-bg-clr);
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -287,7 +337,7 @@ h1.hero-text-lg {
   font-size: clamp(30px, 4vw, 48px);
   max-width: 427px;
   line-height: clamp(35px, 5vw, 56px);
-  color: var(--dark-clr);
+  color: var(--theme-font-clr);
   margin-bottom: 25px;
 }
 p.hero-text-sm {
@@ -295,7 +345,7 @@ p.hero-text-sm {
   font-weight: 300;
   font-size: clamp(18px, 2.5vw, 21px);
   line-height: clamp(25px, 3.5vw, 32px);
-  color: var(--sec-clr100);
+  color: var(--theme-font-clr);
 }
 
 div.hero-img {
@@ -329,7 +379,7 @@ div.hero-text-action > button {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--light-clr);
+  color: var(--theme-clr);
   border: none;
   transform: scale(1);
   transition: transform 0.5ms ease-in-out;
@@ -348,7 +398,7 @@ div.services-wrap {
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
-  background-color: var(--light-mode-bg-clr);
+  background-color: var(--theme-bg-clr);
   position: relative;
   min-height: 100vh;
   padding: 0 3vw clamp(50px, 14vw, 220px);
@@ -391,6 +441,7 @@ h1.services-head {
   height: max-content;
   padding-bottom: clamp(16px, 1.5vw, 26px);
   margin-bottom: clamp(20px, 2vw, 33px);
+  color: var(--theme-font-clr);
 }
 
 h1.services-head::after {
@@ -417,7 +468,7 @@ p.services-intro {
   font-size: clamp(16px, 2vw, 18px);
   line-height: clamp(25px, 3vw, 30px);
   text-align: center;
-  color: var(--sec-clr100);
+  color: var(--theme-font-clr);
   margin-bottom: clamp(40px, 6vw, 80px);
 }
 
@@ -464,7 +515,7 @@ p.services-card-text-sm {
   font-weight: 300;
   font-size: 16px;
   line-height: clamp(23px, 2.3vw, 28px);
-  color: var(--sec-clr100);
+  color: var(--theme-font-clr100);
   width: 100%;
   max-width: 261px;
 }
@@ -492,7 +543,7 @@ p.services-card-text-sm {
 }
 
 section.features-wrap {
-  background-color: var(--light-mode-bg-clr);
+  background-color: var(--theme-bg-clr);
   height: max-content;
   font-size: inherit;
   padding-bottom: clamp(5em, 17vw, 26.6em);
@@ -509,6 +560,7 @@ section.features-wrap {
 .features-item {
   max-width: 665px;
   padding-bottom: 4em;
+  padding-right: 1rem;
   font-size: 1.6em;
   width: calc(100% - 2em);
   margin: 0 auto;
@@ -525,8 +577,7 @@ section.features-wrap {
   width: 100%;
   position: relative;
   /* or 133% */
-
-  color: var(--dark-clr);
+  color: var(--theme-font-clr);
 }
 
 .features-item h3:after {
@@ -556,7 +607,7 @@ section.features-wrap {
   line-height: 2em;
   /* or 167% */
 
-  color: var(--sec-clr100);
+  color: var(--theme-font-clr);
 }
 
 .features-item button {
@@ -587,7 +638,7 @@ section.features-wrap {
 .reviews {
   width: 100%;
   height: max-content;
-  background-color: var(--light-mode-bg-clr);
+  background-color: var(--theme-bg-clr);
   padding-bottom: clamp(10em, 15vw, 22.4em);
   font-size: inherit;
 }
@@ -600,7 +651,7 @@ section.features-wrap {
 .reviews-carousel-item {
   width: 100%;
   height: 100%;
-  color: var(--light-clr);
+  color: var(--theme-clr);
   padding-top: clamp(3.2em, 5vw, 6.4em);
   padding-bottom: clamp(1.6em, 5vw, 3.2em);
   background: linear-gradient(208.18deg, #67c3f3 9.05%, #5a98f2 76.74%);
@@ -662,10 +713,10 @@ section.features-wrap {
   font-size: 18px;
   line-height: 25px;
   /* identical to box height, or 218% */
-  color: var(--light-clr);
+  color: var(--theme-clr);
 }
 .review-title small {
-  color: var(--light-clr-100);
+  color: var(--theme-clr100);
   font-size: clamp(1.6rem, 2vw, 1.8rem);
 }
 
@@ -674,7 +725,7 @@ section.features-wrap {
   font-weight: 400;
   font-size: clamp(1.6rem, 2vw, 1.8rem);
   line-height: 30px;
-  color: var(--light-clr-100);
+  color: var(--theme-clr100);
   width: calc(100% - 3.2rem);
   margin: 0.8rem auto;
   display: grid;

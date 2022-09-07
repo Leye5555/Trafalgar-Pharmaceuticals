@@ -6,18 +6,79 @@ const prev = document.querySelector('.prev'),
   reviewAll = document.querySelectorAll('.reviews-scroll-item'),
   reviewsItem = document.querySelector('.reviews-scroll-item');
 let currentSlide = window.sessionStorage.getItem('currentSlide') || 'slide-1';
+
+// toggle color schemes
+const colorSchemeBtn = document.getElementById('toggleMode');
+let { mode } = colorSchemeBtn.dataset;
+if (
+  window.matchMedia &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches
+) {
+  // dark mode
+  mode = 'light';
+} else if (
+  window.matchMedia &&
+  window.matchMedia('(prefers-color-scheme: light)').matches
+) {
+  // dark mode
+  mode = 'dark';
+}
+
 const lightBg = getComputedStyle(document.documentElement).getPropertyValue(
   '--light-mode-bg-clr'
 );
-let darkBg = getComputedStyle(document.documentElement).getPropertyValue(
+const darkBg = getComputedStyle(document.documentElement).getPropertyValue(
   '--dark-mode-bg-clr'
 );
-let lightTxt = getComputedStyle(document.documentElement).getPropertyValue(
+const lightClr = getComputedStyle(document.documentElement).getPropertyValue(
   '--light-clr'
 );
-let darkTxt = getComputedStyle(document.documentElement).getPropertyValue(
+const darkClr = getComputedStyle(document.documentElement).getPropertyValue(
   '--dark-clr'
 );
+const lightTxt = getComputedStyle(document.documentElement).getPropertyValue(
+  '--sec-clr'
+);
+const lightTxt100 = getComputedStyle(document.documentElement).getPropertyValue(
+  '--sec-clr100'
+);
+const darkTxt = getComputedStyle(document.documentElement).getPropertyValue(
+  '--light-clr'
+);
+colorSchemeBtn.addEventListener('click', handleLightMode);
+
+function handleLightMode(e) {
+  let { mode } = e.target.dataset;
+  if (!mode) return;
+
+  if (
+    mode === 'light' ||
+    (window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: light)').matches)
+  ) {
+    document.documentElement.style.setProperty('--theme-bg-clr', lightBg);
+    document.documentElement.style.setProperty('--theme-clr', lightClr);
+    document.documentElement.style.setProperty('--theme-font-clr', lightTxt);
+    document.documentElement.style.setProperty(
+      '--theme-font-clr100',
+      lightTxt100
+    );
+  } else if (
+    mode === 'dark' ||
+    (window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: light)').matches)
+  ) {
+    document.documentElement.style.setProperty('--theme-bg-clr', darkBg);
+    document.documentElement.style.setProperty('--theme-clr', darkClr);
+    document.documentElement.style.setProperty('--theme-font-clr', darkTxt);
+  }
+  mode = mode === 'light' ? 'dark' : 'light';
+  e.target.setAttribute('data-mode', mode);
+  e.target.style.backgroundImage =
+    mode === 'light'
+      ? "url('./assets/light-mode.png')"
+      : "url('./assets/dark-mode.png')";
+}
 
 let interval = setInterval(() => {
   currentSlide = Number(currentSlide.split('-')[1]);
@@ -33,22 +94,6 @@ next.addEventListener('click', handleControl);
 dots.forEach((each) => {
   each.addEventListener('click', handleControl);
 });
-
-const handleLightMode = (e) => {
-  let { mode } = e.target.dataset;
-  console.log(mode);
-  if (!mode) return;
-
-  if (mode === 'light') {
-    document.documentElement.style.setProperty('--light-mode-bg-clr', darkBg);
-    document.documentElement.style.setProperty('--dark-clr', lightTxt);
-  } else if (mode === 'dark') {
-    document.documentElement.style.setProperty('--light-mode-bg-clr', lightBg);
-    document.documentElement.style.setProperty('--dark-clr', darkTxt);
-  }
-  mode = mode === 'light' ? 'dark' : 'light';
-  e.target.setAttribute('data-mode', mode);
-};
 
 function handleControl(e) {
   handleLightMode(e);
