@@ -66,7 +66,7 @@ function handleLightMode(e) {
   } else if (
     mode === 'dark' ||
     (window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: light)').matches)
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
   ) {
     document.documentElement.style.setProperty('--theme-bg-clr', darkBg);
     document.documentElement.style.setProperty('--theme-clr', darkClr);
