@@ -31,7 +31,7 @@
             /></a>
           </div>
           <ul class="nav-list-lg">
-            <li class="nav-list-item nav-list-item--active`">
+            <li class="nav-list-item nav-list-item--active">
               <a href="/">Home</a>
             </li>
             <li class="nav-list-item"><a href="/">Find a doctor</a></li>
@@ -173,7 +173,11 @@
                   type="image/xml+svg"
                   media="(min-width : 250px)"
                 />
-                <img src="./assets/hero-img-2.svg" alt="hero image" />
+                <img
+                  src="./assets/hero-img-2.svg"
+                  alt="hero image"
+                  loading="lazy"
+                />
               </picture>
             </div>
             <div
@@ -196,7 +200,11 @@
                   type="image/xml+svg"
                   media="(min-width : 250px)"
                 />
-                <img src="./assets/hero-img-3.svg" alt="hero image" />
+                <img
+                  src="./assets/hero-img-3.svg"
+                  alt="hero image"
+                  loading="lazy"
+                />
               </picture>
             </div>
             <div class="features-item flex flow-col justify-center">
@@ -215,27 +223,114 @@
         <section class="reviews">
           <div class="reviews-carousel">
             <div class="reviews-carousel-item">
-              <h1>What our customer are saying</h1>
-              <div class="flex justify-between">
-                <div class="review-icon-wrap me-4 flex justify-center">
-                  <div class="review-icon mb-0">
-                    <img
-                      src="./assets/review-icon-1.svg"
-                      alt="Edward Newgate"
-                    />
+              <h1>What our customers are saying</h1>
+              <div class="reviews-scroll">
+                <div class="reviews-scroll-items flex justify-stretch">
+                  <div
+                    class="reviews-scroll-item flex justify-between"
+                    data-slide="slide-1"
+                  >
+                    1
+                    <div class="review-icon-wrap me-4 flex justify-center">
+                      <div class="review-icon mb-0">
+                        <img
+                          src="./assets/review-icon-1.svg"
+                          alt="Edward Newgate"
+                        />
+                      </div>
+                      <div class="review-title align-self-c">
+                        <p>Edward Newgate</p>
+                        <small>Founder Circle</small>
+                      </div>
+                    </div>
+                    <p class="review-text mt-0">
+                      “Our dedicated patient engagement app and web portal allow
+                      you to access information instantaneously (no tedeous
+                      form, long calls, or administrative hassle) and securely”
+                    </p>
                   </div>
-                  <div class="review-title align-self-c">
-                    <p>Edward Newgate</p>
-                    <small>Founder Circle</small>
+                  <div
+                    class="reviews-scroll-item flex justify-between"
+                    data-slide="slide-2"
+                  >
+                    2
+                    <div class="review-icon-wrap me-4 flex justify-center">
+                      <div class="review-icon mb-0">
+                        <img
+                          src="./assets/review-icon-1.svg"
+                          alt="Edward Newgate"
+                        />
+                      </div>
+                      <div class="review-title align-self-c">
+                        <p>Edward Newgate</p>
+                        <small>Founder Circle</small>
+                      </div>
+                    </div>
+                    <p class="review-text mt-0">
+                      “Our dedicated patient engagement app and web portal allow
+                      you to access information instantaneously (no tedeous
+                      form, long calls, or administrative hassle) and securely”
+                    </p>
+                  </div>
+                  <div
+                    class="reviews-scroll-item flex justify-between"
+                    data-slide="slide-3"
+                  >
+                    3
+                    <div class="review-icon-wrap me-4 flex justify-center">
+                      <div class="review-icon mb-0">
+                        <img
+                          src="./assets/review-icon-1.svg"
+                          alt="Edward Newgate"
+                        />
+                      </div>
+                      <div class="review-title align-self-c">
+                        <p>Edward Newgate</p>
+                        <small>Founder Circle</small>
+                      </div>
+                    </div>
+                    <p class="review-text mt-0">
+                      “Our dedicated patient engagement app and web portal allow
+                      you to access information instantaneously (no tedeous
+                      form, long calls, or administrative hassle) and securely”
+                    </p>
+                  </div>
+                  <div
+                    class="reviews-scroll-item flex justify-between"
+                    data-slide="slide-4"
+                  >
+                    4
+                    <div class="review-icon-wrap me-4 flex justify-center">
+                      <div class="review-icon mb-0">
+                        <img
+                          src="./assets/review-icon-1.svg"
+                          alt="Edward Newgate"
+                        />
+                      </div>
+                      <div class="review-title align-self-c">
+                        <p>Edward Newgate</p>
+                        <small>Founder Circle</small>
+                      </div>
+                    </div>
+                    <p class="review-text mt-0">
+                      “Our dedicated patient engagement app and web portal allow
+                      you to access information instantaneously (no tedeous
+                      form, long calls, or administrative hassle) and securely”
+                    </p>
                   </div>
                 </div>
-                <p class="review-text mt-0">
-                  “Our dedicated patient engagement app and web portal allow you
-                  to access information instantaneously (no tedeous form, long
-                  calls, or administrative hassle) and securely”
-                </p>
               </div>
             </div>
+          </div>
+          <div class="reviews-carousel-controls flex justify-between">
+            <span class="prev arr" data-name="prev">&#8592;</span
+            ><span class="dot" data-slide="slide-1">&nbsp;</span
+            ><span class="dot" data-slide="slide-2">&nbsp;</span
+            ><span class="dot" data-slide="slide-3">&nbsp;</span
+            ><span class="dot" data-slide="slide-4">&nbsp;</span
+            ><span class="next arr" data-mode="light" data-name="next"
+              >&#8594;</span
+            >
           </div>
         </section>
       </main>
