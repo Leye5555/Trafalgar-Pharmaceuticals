@@ -16,12 +16,14 @@ if (
 ) {
   // dark mode
   mode = 'light';
+  colorSchemeBtn.setAttribute('data-mode', mode);
 } else if (
   window.matchMedia &&
   window.matchMedia('(prefers-color-scheme: light)').matches
 ) {
   // dark mode
   mode = 'dark';
+  colorSchemeBtn.setAttribute('data-mode', mode);
 }
 
 const lightBg = getComputedStyle(document.documentElement).getPropertyValue(
@@ -51,11 +53,7 @@ function handleLightMode(e) {
   let { mode } = e.target.dataset;
   if (!mode) return;
 
-  if (
-    mode === 'light' ||
-    (window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: light)').matches)
-  ) {
+  if (mode === 'light') {
     document.documentElement.style.setProperty('--theme-bg-clr', lightBg);
     document.documentElement.style.setProperty('--theme-clr', lightClr);
     document.documentElement.style.setProperty('--theme-font-clr', lightTxt);
@@ -63,11 +61,7 @@ function handleLightMode(e) {
       '--theme-font-clr100',
       lightTxt100
     );
-  } else if (
-    mode === 'dark' ||
-    (window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
+  } else if (mode === 'dark') {
     document.documentElement.style.setProperty('--theme-bg-clr', darkBg);
     document.documentElement.style.setProperty('--theme-clr', darkClr);
     document.documentElement.style.setProperty('--theme-font-clr', darkTxt);
