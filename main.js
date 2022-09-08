@@ -1,11 +1,23 @@
-const prev = document.querySelector('.prev'),
-  next = document.querySelector('.next'),
-  dots = document.querySelectorAll('.dot'),
-  reviewScroll = document.querySelector('.reviews-scroll'),
-  reviewsWrap = document.querySelector('.reviews-scroll-items'),
-  reviewAll = document.querySelectorAll('.reviews-scroll-item'),
-  reviewsItem = document.querySelector('.reviews-scroll-item');
-let currentSlide = window.sessionStorage.getItem('currentSlide') || 'slide-1';
+window.sessionStorage.setItem('currentSlide', 'slide-1');
+const prev = document.querySelector('.prev');
+const next = document.querySelector('.next');
+const reviews = document.querySelector('.reviews-carousel');
+const container = document.querySelector('.container');
+const dots = document.querySelectorAll('.dot');
+const reviewScroll = document.querySelector('.reviews-scroll-items');
+const totalScrollDistance = reviewScroll.getBoundingClientRect().width;
+const reviewAll = document.querySelectorAll('.reviews-scroll-item');
+const reviewsItem = document.querySelector('.reviews-scroll-item');
+const fixedDistance = reviewsItem.getBoundingClientRect().width;
+console.log(fixedDistance);
+const SPEED = 0.5;
+let timeDelay = null;
+let touchDelay = null;
+const TOTAL_SLIDES = 4;
+let currentSlide = 1;
+let distance = 0;
+let start;
+let animationId = '';
 
 // toggle color schemes
 const colorSchemeBtn = document.getElementById('toggleMode');
@@ -47,6 +59,13 @@ const lightTxt100 = getComputedStyle(document.documentElement).getPropertyValue(
 const darkTxt = getComputedStyle(document.documentElement).getPropertyValue(
   '--light-clr'
 );
+const lightShadow = getComputedStyle(document.documentElement).getPropertyValue(
+  '--light-shadow-clr'
+);
+const darkShadow = getComputedStyle(document.documentElement).getPropertyValue(
+  '--dark-shadow-clr'
+);
+
 colorSchemeBtn.addEventListener('click', handleLightMode);
 
 function handleLightMode(e) {
@@ -61,10 +80,18 @@ function handleLightMode(e) {
       '--theme-font-clr100',
       lightTxt100
     );
+    document.documentElement.style.setProperty(
+      '--theme-shadow-clr',
+      darkShadow
+    );
   } else if (mode === 'dark') {
     document.documentElement.style.setProperty('--theme-bg-clr', darkBg);
     document.documentElement.style.setProperty('--theme-clr', darkClr);
     document.documentElement.style.setProperty('--theme-font-clr', darkTxt);
+    document.documentElement.style.setProperty(
+      '--theme-shadow-clr',
+      lightShadow
+    );
   }
   mode = mode === 'light' ? 'dark' : 'light';
   e.target.setAttribute('data-mode', mode);
@@ -73,16 +100,9 @@ function handleLightMode(e) {
       ? "url('./assets/light-mode.png')"
       : "url('./assets/dark-mode.png')";
 }
+// end of color schemes
 
-let interval = setInterval(() => {
-  currentSlide = Number(currentSlide.split('-')[1]);
-  if (currentSlide >= 4) currentSlide = 1;
-  currentSlide++;
-  // handleScroll(currentSlide, scrollDistance);
-  window.sessionStorage.setItem('currentSlide', `slide-${currentSlide}`);
-  currentSlide = `slide-${currentSlide}`;
-}, 5000);
-
+// start of carousel
 prev.addEventListener('click', handleControl);
 next.addEventListener('click', handleControl);
 dots.forEach((each) => {
@@ -90,60 +110,108 @@ dots.forEach((each) => {
 });
 
 function handleControl(e) {
-  handleLightMode(e);
-  window.clearInterval(interval);
+  window.cancelAnimationFrame(animationId);
   currentSlide = window.sessionStorage.getItem('currentSlide');
+  window.sessionStorage.setItem('animeState', 'paused');
+  if (!timeDelay) {
+    console.log('delay');
+    timeDelay = setTimeout(() => {
+      window.sessionStorage.setItem('animeState', 'play');
+      animationId = increment();
+      timeDelay = null;
+    }, 5000);
+  }
+
   const btn = e.target;
   if (btn.getAttribute('data-slide'))
     currentSlide = btn.getAttribute('data-slide');
 
   if (!currentSlide) return;
   currentSlide = Number(currentSlide.split('-')[1]);
-
-  if (btn.getAttribute('data-name') === 'prev' && currentSlide >= 2)
+  console.log(currentSlide);
+  if (btn.getAttribute('data-name') === 'prev' && currentSlide > 1) {
     currentSlide--;
-  else if (btn.getAttribute('data-name') === 'next' && currentSlide <= 3)
+  } else if (btn.getAttribute('data-name') === 'next' && currentSlide <= 3) {
     currentSlide++;
-  else if (btn.getAttribute('data-name') === 'prev' && currentSlide <= 1)
+  } else if (btn.getAttribute('data-name') === 'prev' && currentSlide < 2) {
     currentSlide = 4;
-  else if (btn.getAttribute('data-name') === 'next' && currentSlide >= 4)
+  } else if (btn.getAttribute('data-name') === 'next' && currentSlide >= 4) {
     currentSlide = 1;
+  }
 
   window.sessionStorage.setItem('currentSlide', `slide-${currentSlide}`);
-  currentSlide = `slide-${currentSlide}`;
-
-  interval = setInterval(() => {
-    currentSlide = Number(currentSlide.split('-')[1]);
-    if (currentSlide > 3) currentSlide = 0;
-    currentSlide++;
-    console.log('test');
-    window.sessionStorage.setItem('currentSlide', `slide-${currentSlide}`);
-    currentSlide = `slide-${currentSlide}`;
-  }, 5000);
-
-  const opts = {
-    root: reviewScroll,
-    rootMargin: '0px',
-    threshold: 0.75,
-  };
-
-  const cbf = (entries, observer) => {
-    entries.forEach((entry) => {
-      console.log(entry);
-      let distance = 0,
-        speed = 0.1;
-      if (entry.isIntersecting) {
-        currentSlide = entry.target.dataset.slide;
-        let timeOut = undefined;
-
-        console.log(entry.boundingClientRect.width);
-      }
-    });
-  };
-
-  const observer = new IntersectionObserver(cbf, opts);
-  const totalDistance = reviewsWrap.getBoundingClientRect().width;
-  reviewAll.forEach((element) => {
-    observer.observe(element);
-  });
 }
+
+function increment(timeStamp) {
+  const animeState = window.sessionStorage.getItem('animeState');
+  if (animeState === null || animeState === 'paused') return;
+  if (start === undefined) start = timeStamp;
+  const totalDistance = Math.round(fixedDistance * TOTAL_SLIDES);
+  const timeElapsed = timeStamp - start;
+  reviewScroll.scrollLeft = distance + SPEED * timeElapsed;
+  let currentDistance = Math.round(fixedDistance * currentSlide);
+  console.log('still running');
+  if (reviewScroll.scrollLeft >= currentDistance) {
+    console.log('done');
+    currentSlide++;
+    window.sessionStorage.setItem('currentSlide', `slide-${currentSlide}`);
+    console.log(currentSlide);
+    window.cancelAnimationFrame(animationId);
+    setTimeout(() => {
+      start = undefined;
+      distance = distance + SPEED * timeElapsed;
+      window.requestAnimationFrame(increment);
+    }, 5000);
+    return;
+  }
+  if (reviewScroll.scrollLeft >= totalDistance - fixedDistance) {
+    window.cancelAnimationFrame(animationId);
+    currentSlide = 1;
+    window.sessionStorage.setItem('currentSlide', `slide-${currentSlide}`);
+    setTimeout(() => {
+      start = undefined;
+      reviewScroll.scrollLeft = 0;
+      distance = 0;
+    }, 2000);
+    setTimeout(() => window.requestAnimationFrame(increment), 5000);
+    return;
+  }
+
+  window.requestAnimationFrame(increment);
+}
+
+const opts = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.5,
+};
+
+const cbf = (entries, observer) => {
+  entries.forEach((entry) => {
+    console.log(entry.isIntersecting);
+    if (entry.isIntersecting) {
+      window.sessionStorage.setItem('animeState', 'play');
+      animationId = increment();
+    } else {
+      window.cancelAnimationFrame(animationId);
+      window.sessionStorage.setItem('animeState', 'paused');
+    }
+  });
+};
+
+const observer = new IntersectionObserver(cbf, opts);
+observer.observe(reviews);
+
+/// touch scroll
+reviewScroll.addEventListener('touchmove', () => {
+  window.cancelAnimationFrame(animationId);
+  window.sessionStorage.setItem('animeState', 'paused');
+  if (!touchDelay) {
+    console.log('touch delay');
+    touchDelay = setTimeout(() => {
+      window.sessionStorage.setItem('animeState', 'play');
+      animationId = increment();
+      touchDelay = null;
+    }, 5000);
+  }
+});
